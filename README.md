@@ -36,3 +36,31 @@ A separate PyTorch tensor-resizing experiment measured:
 
 Note: This is a synthetic tensor benchmark, not an end-to-end
 computer vision pipeline benchmark.
+
+
+
+## Complete Pipeline Worker Optimization
+
+Dataset: 500 images (1280x720)
+
+| Workers | Median Runtime (s) | Throughput (img/s) |
+|---:|---:|---:|
+| 1 | 12.0499 | 41.49 |
+| 2 | 6.8568 | 72.92 |
+| 4 | 4.1594 | 120.21 |
+| 8 | 3.0186 | 165.64 |
+| 16 | 2.4882 | 200.95 |
+
+### Key Findings
+
+- Best tested configuration: 16 workers
+- Single-worker runtime: 12.0499 seconds
+- 16-worker runtime: 2.4882 seconds
+- Speedup: 4.84x
+- Runtime reduction: 79.35%
+- Failed images: 0
+
+The benchmark uses parallel image loading followed by
+sequential OpenCV transformations and image saving.
+
+Results are specific to this hardware, dataset and workload.
