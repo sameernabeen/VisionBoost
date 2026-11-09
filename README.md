@@ -64,3 +64,28 @@ The benchmark uses parallel image loading followed by
 sequential OpenCV transformations and image saving.
 
 Results are specific to this hardware, dataset and workload.
+
+
+## Large-Scale Dataset Testing
+
+Hardware: AMD Ryzen 7 5800H
+Workers: 16
+Batch size: 32
+Processing: OpenCV CPU pipeline
+
+| Images | Runtime (s) | Throughput (img/s) | Sampled RAM (MB) | Failures |
+|---:|---:|---:|---:|---:|
+| 500 | 2.6646 | 187.64 | 137.72 | 0 |
+| 1,000 | 7.5832 | 131.87 | 138.70 | 0 |
+| 2,500 | 17.2021 | 145.33 | 141.17 | 0 |
+| 5,000 | 31.3578 | 159.45 | 143.46 | 0 |
+
+### Observations
+
+- Successfully processed 5,000 synthetic images.
+- No image-processing failures in the reported runs.
+- Sampled memory increased by approximately 4.15%
+  between the 500-image and 5,000-image tests.
+- Batch processing limits the number of simultaneously
+  loaded images.
+- Results are specific to the tested hardware and workload.
