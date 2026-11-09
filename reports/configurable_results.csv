@@ -1,0 +1,5 @@
+dataset_size,workers,batch_size,processed,failed,runtime_seconds,throughput,peak_sampled_ram_mb
+5000,16,32,5000,0,27.8202,179.73,144.89
+5000,8,64,5000,0,30.0786,166.23,228.1
+5000,4,16,5000,0,44.157,113.23,101.5
+2500,8,32,2500,0,16.4311,152.15,141.8
