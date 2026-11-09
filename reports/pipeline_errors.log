@@ -1,1 +1,2 @@
 2026-11-09 16:59:23,454 | ERROR | dataset\error_test\corrupted.jpg | loading | Image is corrupted or unreadable
+2026-11-09 17:12:37,957 | ERROR | dataset\error_test\corrupted.jpg | loading | attempts=3 | Image is corrupted or unreadable
