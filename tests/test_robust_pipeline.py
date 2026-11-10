@@ -185,3 +185,38 @@ def test_multiple_valid_images(tmp_path):
 
     for i in range(5):
         assert (output_dir / f"image_{i}.jpg").exists()
+
+
+
+def test_image_save_failure_handling(tmp_path):
+    """A save failure should be retried and recorded in the error CSV."""
+
+    input_dir = tmp_path / "input"
+    output_dir = tmp_path / "output"
+    report_dir = tmp_path / "test_reports"
+
+    # Create a valid input image.
+    create_valid_image(input_dir, "blocked.jpg")
+
+    # Create a directory with the same name as the output image.
+    # This prevents OpenCV from saving the image at that path.
+    output_dir.mkdir(parents=True, exist_ok=True)
+    (output_dir / "blocked.jpg").mkdir()
+
+    result = run_pipeline(input_dir, output_dir)
+
+    assert result.returncode == 0
+    assert "processed: 0" in result.stdout
+    assert "failed: 1" in result.stdout
+
+    # Verify that the failure was recorded.
+    error_report = report_dir / "pipeline_errors.csv"
+
+    assert error_report.exists()
+
+    with open(error_report, "r", encoding="utf-8") as file:
+        report_content = file.read()
+
+    assert "blocked.jpg" in report_content
+    assert "processing" in report_content
+    assert "3" in report_content
