@@ -1,0 +1,28 @@
+VISIONBOOST MEMORY COMPARISON
+=======================================================
+Dataset size: 500
+Repetitions: 3
+Sampling interval: 0.05 seconds
+Memory metric: peak sampled aggregate process-tree RSS
+
+BASELINE
+Median runtime: 7.2375 sec
+Median throughput: 69.08 img/sec
+Median peak sampled process-tree RSS: 55.04 MB
+Total processed: 1500
+Total failed: 0
+
+OPTIMIZED
+Median runtime: 2.4962 sec
+Median throughput: 200.31 img/sec
+Median peak sampled process-tree RSS: 128.54 MB
+Total processed: 1500
+Total failed: 0
+
+ROBUST
+Median runtime: 2.5358 sec
+Median throughput: 197.18 img/sec
+Median peak sampled process-tree RSS: 143.52 MB
+Total processed: 1500
+Total failed: 0
+

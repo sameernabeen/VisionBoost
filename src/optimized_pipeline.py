@@ -9,6 +9,7 @@ INPUT_DIR = "dataset/input"
 OUTPUT_DIR = "dataset/output_optimized"
 
 WORKERS = 16
+BATCH_SIZE = 32
 
 os.makedirs(OUTPUT_DIR, exist_ok=True)
 
@@ -16,8 +17,10 @@ image_paths = sorted(
     glob.glob(os.path.join(INPUT_DIR, "*.jpg"))
 )
 
+
 def read_image(path):
     return path, cv2.imread(path)
+
 
 def process_image(path, image):
 
@@ -58,18 +61,25 @@ failed = 0
 
 with ThreadPoolExecutor(max_workers=WORKERS) as executor:
 
-    for path, image in executor.map(read_image, image_paths):
+    for start in range(0, len(image_paths), BATCH_SIZE):
 
-        if process_image(path, image):
-            processed += 1
-        else:
-            failed += 1
+        batch_paths = image_paths[start:start + BATCH_SIZE]
+
+        for path, image in executor.map(read_image, batch_paths):
+
+            if process_image(path, image):
+                processed += 1
+            else:
+                failed += 1
+
+            del image
 
 total_time = time.perf_counter() - start_time
 
-print("\n===== OPTIMIZED PIPELINE RESULTS =====")
+print("\n===== BATCH-OPTIMIZED PIPELINE RESULTS =====")
 
 print("Workers:", WORKERS)
+print("Batch size:", BATCH_SIZE)
 print("Images processed:", processed)
 print("Failed:", failed)
 
