@@ -1,0 +1,43 @@
+VISIONBOOST RANDOMIZED BENCHMARK
+=======================================================
+Dataset size: 500
+Repetitions: 5
+Random seed: 42
+
+Runtime is measured externally around each Python subprocess. It includes interpreter startup.
+
+All comparisons use the same input dataset.
+
+=======================================================
+
+BASELINE
+Median runtime: 7.7357 sec
+Mean runtime: 7.4172 sec
+Standard deviation: 0.5545 sec
+Median throughput: 64.64 img/sec
+Total processed: 2500
+Total failed: 0
+
+OPTIMIZED
+Median runtime: 2.1886 sec
+Mean runtime: 2.6948 sec
+Standard deviation: 1.1361 sec
+Median throughput: 228.46 img/sec
+Total processed: 2500
+Total failed: 0
+
+ROBUST
+Median runtime: 2.5610 sec
+Mean runtime: 2.5507 sec
+Standard deviation: 0.1400 sec
+Median throughput: 195.23 img/sec
+Total processed: 2500
+Total failed: 0
+
+OPTIMIZED VS BASELINE
+Median speedup: 3.53x
+Runtime reduction: 71.71%
+
+ROBUST VS BASELINE
+Median speedup: 3.02x
+Runtime reduction: 66.89%

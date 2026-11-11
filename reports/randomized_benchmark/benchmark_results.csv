@@ -1,0 +1,16 @@
+round,order_position,pipeline,runtime_seconds,processed,failed,throughput_images_per_second,return_code,random_seed
+1,1,optimized,4.7121,500,0,106.11,0,42
+1,2,baseline,7.8239,500,0,63.91,0,42
+1,3,robust,2.6713,500,0,187.18,0,42
+2,1,robust,2.454,500,0,203.75,0,42
+2,2,optimized,2.4155,500,0,207.0,0,42
+2,3,baseline,6.8784,500,0,72.69,0,42
+3,1,optimized,2.0969,500,0,238.45,0,42
+3,2,robust,2.3695,500,0,211.02,0,42
+3,3,baseline,7.7357,500,0,64.64,0,42
+4,1,optimized,2.0611,500,0,242.59,0,42
+4,2,robust,2.561,500,0,195.23,0,42
+4,3,baseline,6.7517,500,0,74.05,0,42
+5,1,optimized,2.1886,500,0,228.46,0,42
+5,2,baseline,7.8964,500,0,63.32,0,42
+5,3,robust,2.6977,500,0,185.34,0,42
