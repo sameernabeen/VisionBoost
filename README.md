@@ -1,9 +1,13 @@
 # VisionBoost
 ### Performance Optimization and Memory-Efficient Computer Vision Pipeline
 
-VisionBoost is a Python-based computer vision engineering project focused on improving image-processing performance, reducing memory consumption, and building reliable, scalable image-processing workflows.
+VisionBoost is a Python-based computer vision engineering project focused on improving image-processing performance, reducing memory consumption, and building reliable, configurable, and scalable image-processing workflows.
 
-The project investigates how parallel image loading, batch processing, configurable execution, and error-handling strategies affect the performance of an OpenCV image-processing pipeline.
+The project investigates how parallel image loading, batch processing, worker configuration, and error-handling strategies affect the performance of an OpenCV image-processing pipeline.
+
+The primary objective is to optimize a conventional image-processing workflow while evaluating runtime, throughput, memory usage, and reliability through reproducible experiments.
+
+---
 
 ## Project Objectives
 
@@ -14,7 +18,11 @@ The project investigates how parallel image loading, batch processing, configura
 - Evaluate pipeline performance across different dataset sizes.
 - Implement retry mechanisms and failure logging.
 - Compare runtime, throughput, memory usage, and reliability.
+- Identify balanced worker and batch-size configurations.
 - Build reproducible benchmarking experiments.
+- Develop automated tests for pipeline reliability.
+
+---
 
 ## Technology Stack
 
@@ -30,6 +38,9 @@ The project investigates how parallel image loading, batch processing, configura
 | Visualization | Matplotlib |
 | Testing | pytest |
 | Version control | Git and GitHub |
+| Development environment | Visual Studio Code |
+
+---
 
 ## Experimental Environment
 
@@ -47,7 +58,9 @@ The experiments were conducted on the following system:
 | PyTorch | 2.15.0+cu132 |
 | IDE | Visual Studio Code |
 
-**Important:** The main OpenCV image-processing pipeline uses CPU operations. CUDA-enabled PyTorch was installed for a separate GPU experiment; the GPU results should not be interpreted as end-to-end acceleration of the OpenCV pipeline.
+**Important:** The main OpenCV image-processing pipeline uses CPU operations. CUDA-enabled PyTorch was installed for a separate GPU experiment. GPU tensor benchmark results should not be interpreted as end-to-end acceleration of the OpenCV pipeline.
+
+---
 
 ## Image Processing Workflow
 
@@ -63,29 +76,34 @@ Each image passes through the following operations:
 ### Pipeline Architecture
 
 ```text
-             Input Dataset
-                   |
-                   v
-              Image Loading
-                   |
-                   v
-             Image Resizing
-                   |
-                   v
-           Grayscale Conversion
-                   |
-                   v
-              Gaussian Blur
-                   |
-                   v
-             Canny Edge Detection
-                   |
-                   v
-             Output Image Saving
-                   |
-                   v
-             Benchmark Reports
+                 Input Dataset
+                       |
+                       v
+                Parallel Image Loading
+                       |
+                       v
+                 Batch Processing
+                       |
+                       v
+                  Image Resizing
+                       |
+                       v
+                Grayscale Conversion
+                       |
+                       v
+                   Gaussian Blur
+                       |
+                       v
+                Canny Edge Detection
+                       |
+                       v
+                Output Image Saving
+                       |
+                       v
+                 Benchmark Reports
 ```
+
+---
 
 ## Project Structure
 
@@ -94,24 +112,36 @@ VisionBoost/
 │
 ├── dataset/
 │   ├── input/
-│   └── output/
+│   ├── output/
+│   └── output_optimized/
 │
 ├── src/
+│   ├── __init__.py
 │   ├── generate_data.py
 │   ├── baseline.py
 │   ├── benchmark.py
 │   ├── profile_pipeline.py
+│   ├── gpu_check.py
+│   ├── benchmark_loading.py
 │   ├── optimized_pipeline.py
-│   ├── robust_pipeline.py
+│   ├── gpu_benchmark.py
+│   ├── worker_benchmark.py
+│   ├── full_pipeline_worker_benchmark.py
 │   ├── memory_benchmark.py
 │   ├── memory_profiler.py
-│   ├── compare_pipeline_memory.py
-│   ├── randomized_benchmark.py
+│   ├── generate_scale_data.py
 │   ├── scale_benchmark.py
+│   ├── benchmark_report.py
 │   ├── configurable_pipeline.py
-│   └── final_benchmark_report.py
+│   ├── robust_pipeline.py
+│   ├── final_benchmark_report.py
+│   ├── randomized_benchmark.py
+│   ├── compare_pipeline_memory.py
+│   ├── configuration_benchmark.py
+│   └── final_configuration_validation.py
 │
 ├── tests/
+│   ├── test_optimized_pipeline.py
 │   └── test_robust_pipeline.py
 │
 ├── docs/
@@ -120,6 +150,8 @@ VisionBoost/
 ├── reports/
 │   ├── randomized_benchmark/
 │   ├── memory_comparison/
+│   ├── configuration_benchmark/
+│   ├── final_configuration_validation/
 │   └── final_benchmark_report.md
 │
 ├── requirements.txt
@@ -127,7 +159,9 @@ VisionBoost/
 └── .gitignore
 ```
 
-Generated datasets and intermediate outputs are excluded from version control.
+Generated datasets, intermediate outputs, virtual environments, and temporary files are excluded from version control.
+
+---
 
 ## Pipeline Implementations
 
@@ -139,15 +173,32 @@ It establishes a reference point for evaluating subsequent improvements.
 
 ### 2. Optimized Pipeline
 
-The optimized pipeline introduces:
+The optimized implementation introduces:
 
-- Parallel image loading using ThreadPoolExecutor.
+- Parallel image loading using `ThreadPoolExecutor`.
 - Configurable worker count.
 - Batch-based image loading.
 - OpenCV image transformations.
-- Throughput measurement.
+- Configurable input and output directories.
+- Runtime and throughput measurement.
+- Input validation and processing failure counting.
 
-The current batch configuration uses 16 workers and a batch size of 32.
+The default configuration is:
+
+| Parameter | Default |
+|---|---:|
+| Workers | 8 |
+| Batch size | 32 |
+| Input directory | `dataset/input` |
+| Output directory | `dataset/output_optimized` |
+
+The worker and batch-size parameters can be changed through command-line arguments.
+
+Example:
+
+```powershell
+python src/optimized_pipeline.py --workers 12 --batch-size 64
+```
 
 ### 3. Robust Pipeline
 
@@ -159,12 +210,15 @@ The robust implementation introduces:
 - Configurable worker and batch sizes.
 - Error logging.
 - CSV performance reports.
+- Handling of corrupted and unreadable images.
 
 The pipeline retries failed operations up to three total attempts.
 
+---
+
 ## Performance Benchmark Results
 
-### Randomized Benchmark
+### 1. Randomized Benchmark
 
 A randomized benchmark compared the baseline, optimized, and robust implementations.
 
@@ -198,7 +252,7 @@ The optimized pipeline also showed greater run-to-run variation than the robust 
 
 These results are specific to the tested environment and workload.
 
-### Memory Optimization Experiment
+### 2. Memory Optimization Experiment
 
 An additional experiment evaluated memory consumption using separate subprocesses.
 
@@ -227,14 +281,14 @@ The batching modification traded approximately 6.94% higher median runtime for s
 
 The before-and-after results come from separate experiments and should be interpreted as preliminary measurements.
 
-### Large-Scale Dataset Experiment
+### 3. Large-Scale Dataset Experiment
 
 The pipeline was also evaluated with larger synthetic datasets.
 
 Configuration: 16 workers and batch size 32.
 
 | Dataset Size | Runtime | Throughput | Sampled RAM |
-|---:|---:|---:|---:|
+|---|---:|---:|---:|
 | 1,000 | 7.5832 sec | 131.87 img/sec | 138.70 MB |
 | 2,500 | 17.2021 sec | 145.33 img/sec | 141.17 MB |
 | 5,000 | 31.3578 sec | 159.45 img/sec | 143.46 MB |
@@ -243,7 +297,80 @@ All reported scale-test executions processed their complete datasets without fai
 
 These are individual recorded scale-test runs, not repeated median measurements.
 
-### Separate GPU Tensor Experiment
+### 4. Configuration Benchmark
+
+A configuration benchmark evaluated different combinations of workers and batch sizes.
+
+**Experimental configuration:**
+
+- Dataset: 500 images.
+- Worker counts: 4, 8, 12, and 16.
+- Batch sizes: 8, 16, 32, and 64.
+- Repetitions: 3 per configuration.
+- Total executions: 48.
+
+The fastest preliminary configuration was 12 workers with batch size 64.
+
+The lowest-memory preliminary configuration was 4 workers with batch size 64.
+
+These results were used to select three candidates for further validation.
+
+---
+
+## Final Configuration Validation
+
+After the initial configuration benchmark, three configurations were selected for a final validation.
+
+Each configuration was tested over 10 repetitions using a randomized execution order with seed 42.
+
+Every repetition processed 500 images.
+
+### Validation Results
+
+| Configuration | Workers | Batch Size | Median External Runtime | Median Pipeline Runtime | Throughput | Sampled Process-Tree RSS |
+|---|---:|---:|---:|---:|---:|---:|
+| Memory Efficient | 4 | 64 | 4.2868 sec | 3.5537 sec | 116.63 img/sec | 69.22 MB |
+| Balanced | 8 | 32 | 3.3523 sec | 2.6101 sec | 149.15 img/sec | 98.48 MB |
+| Fastest Candidate | 12 | 64 | 3.2580 sec | 2.4960 sec | 153.47 img/sec | 161.05 MB |
+
+### Validation Reliability
+
+- 10 repetitions per configuration.
+- 5,000 total images processed per configuration.
+- 15,000 image-processing executions across all configurations.
+- Zero failed images across the validation runs.
+
+### Selected Default Configuration
+
+The recommended default is **8 workers with a batch size of 32**.
+
+Reasons:
+
+- Approximately 2.9% slower than the fastest candidate based on median external runtime.
+- Approximately 38.9% lower sampled process-tree RSS than the fastest candidate.
+- Provides a practical balance between processing speed and memory consumption.
+
+Other configurations remain available:
+
+| Use Case | Workers | Batch Size |
+|---|---:|---:|
+| Memory efficient | 4 | 64 |
+| Balanced default | 8 | 32 |
+| Higher throughput | 12 | 64 |
+
+The balanced configuration was selected as the default based on the measured speed-memory trade-off. It is not claimed to be universally optimal.
+
+**Measurement notes:**
+
+- External runtime includes Python interpreter startup.
+- Pipeline runtime measures execution inside the pipeline.
+- Throughput values are based on external runtime.
+- Memory values are sampled aggregate process-tree RSS measurements.
+- These experiments use the same tested hardware and synthetic dataset.
+
+---
+
+## Separate GPU Tensor Experiment
 
 A separate PyTorch experiment evaluated tensor resizing on CPU and GPU.
 
@@ -256,11 +383,24 @@ The experiment recorded approximately 21.07× speedup on GPU.
 
 This is a synthetic tensor-resizing experiment. It does not represent the performance of the complete OpenCV image-processing pipeline and excludes the costs of transferring image data between CPU and GPU.
 
-## Reliability and Testing
+---
 
-The robust pipeline includes retry handling and error reporting.
+## Reliability and Automated Testing
 
-The automated test suite currently contains eight tests:
+The project includes automated tests for both the optimized and robust pipelines.
+
+**Optimized pipeline tests (8):**
+
+- Valid image processing.
+- Incomplete final batch handling.
+- Invalid worker count.
+- Invalid batch size.
+- Missing input directory.
+- Empty input directory.
+- Invalid image handling.
+- Image-saving failure handling.
+
+**Robust pipeline tests (8):**
 
 - Valid image processing.
 - Corrupted image handling.
@@ -271,13 +411,17 @@ The automated test suite currently contains eight tests:
 - Multiple valid images.
 - Image-saving failure handling.
 
-The latest recorded test execution passed all eight tests.
+### Latest Test Result
 
-Run the tests using:
+**16 tests passed in 30.49 seconds.**
 
-```bash
-pytest -v
+Run the complete test suite using:
+
+```powershell
+python -m pytest -v
 ```
+
+---
 
 ## Installation and Setup
 
@@ -289,14 +433,13 @@ pytest -v
 
 ### Clone the Repository
 
-```bash
+```powershell
 git clone https://github.com/sameernabeen/VisionBoost.git
+
 cd VisionBoost
 ```
 
 ### Create a Virtual Environment
-
-Windows PowerShell:
 
 ```powershell
 python -m venv venv
@@ -312,6 +455,7 @@ Activate it:
 
 ```powershell
 python -m pip install --upgrade pip
+
 pip install -r requirements.txt
 ```
 
@@ -323,22 +467,48 @@ python src/generate_data.py
 
 ### Run the Pipelines
 
-Baseline:
+**Baseline:**
 
 ```powershell
 python src/baseline.py
 ```
 
-Optimized:
+**Optimized:**
 
 ```powershell
 python src/optimized_pipeline.py
 ```
 
-Robust:
+**Robust:**
 
 ```powershell
 python src/robust_pipeline.py
+```
+
+### Configure the Optimized Pipeline
+
+Default configuration:
+
+```powershell
+python src/optimized_pipeline.py
+```
+
+Custom worker and batch configuration:
+
+```powershell
+python src/optimized_pipeline.py --workers 12 --batch-size 64
+```
+
+Memory-efficient configuration:
+
+```powershell
+python src/optimized_pipeline.py --workers 4 --batch-size 64
+```
+
+Custom input and output directories:
+
+```powershell
+python src/optimized_pipeline.py --input dataset/input --output dataset/test_output --workers 8 --batch-size 32
 ```
 
 ### Run Benchmarks
@@ -355,11 +525,25 @@ Memory comparison:
 python src/compare_pipeline_memory.py
 ```
 
-Run automated tests:
+Configuration benchmark:
 
 ```powershell
-pytest -v
+python src/configuration_benchmark.py
 ```
+
+Final configuration validation:
+
+```powershell
+python src/final_configuration_validation.py
+```
+
+### Run Automated Tests
+
+```powershell
+python -m pytest -v
+```
+
+---
 
 ## Key Engineering Findings
 
@@ -369,7 +553,11 @@ pytest -v
 4. Memory consumption and processing speed must be evaluated together.
 5. Retry handling and failure logging improve pipeline reliability.
 6. Randomized execution order helps reduce systematic execution-order bias.
-7. Benchmark results must be interpreted in the context of hardware, dataset size, implementation, and measurement methodology.
+7. Worker count and batch size should be selected based on workload and available resources.
+8. Repeated configuration validation provides stronger evidence than a single benchmark run.
+9. Benchmark results must be interpreted in the context of hardware, dataset size, implementation, and measurement methodology.
+
+---
 
 ## Current Limitations
 
@@ -377,20 +565,26 @@ pytest -v
 - Results are hardware- and workload-dependent.
 - Memory measurements use periodic sampling.
 - The randomized benchmark uses five repetitions per pipeline.
+- Final configuration validation uses ten repetitions per candidate.
 - GPU acceleration has only been evaluated separately using synthetic tensors.
 - Further testing is required on real-world image datasets.
-- Batch-size and worker-count configurations need broader repeated evaluation.
+- The current optimized pipeline parallelizes image loading; image transformations are performed sequentially within the processing loop.
+
+---
 
 ## Future Improvements
 
-- Systematic worker-count and batch-size tuning.
-- More rigorous memory profiling.
 - Evaluation on real-world image datasets.
+- More rigorous memory profiling.
 - GPU acceleration of the complete image-processing workflow.
 - Comparison of additional image-loading and processing strategies.
 - Benchmarking across different image resolutions.
 - Improved experiment automation and visualization.
 - Expanded reliability and integration testing.
+- Evaluation on larger datasets and different hardware configurations.
+- Investigation of parallel image transformation and saving.
+
+---
 
 ## Author
 
