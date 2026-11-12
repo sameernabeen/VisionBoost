@@ -1,0 +1,44 @@
+VISIONBOOST FINAL CONFIGURATION VALIDATION
+=================================================================
+Dataset size: 500
+Repetitions per configuration: 10
+Total executions: 30
+Random seed: 42
+Memory: median peak sampled aggregate process-tree RSS
+External runtime includes Python interpreter startup.
+
+MEMORY_EFFICIENT
+Configuration: 4 workers, batch 64
+Median external runtime: 4.2868 sec
+Median pipeline runtime: 3.5537 sec
+Median throughput: 116.63 img/sec
+Median peak sampled RSS: 69.22 MB
+Runtime standard deviation: 0.1122 sec
+Total processed: 5000
+Total failed: 0
+
+BALANCED
+Configuration: 8 workers, batch 32
+Median external runtime: 3.3523 sec
+Median pipeline runtime: 2.6101 sec
+Median throughput: 149.15 img/sec
+Median peak sampled RSS: 98.48 MB
+Runtime standard deviation: 0.2576 sec
+Total processed: 5000
+Total failed: 0
+
+FASTEST_CANDIDATE
+Configuration: 12 workers, batch 64
+Median external runtime: 3.2580 sec
+Median pipeline runtime: 2.4960 sec
+Median throughput: 153.47 img/sec
+Median peak sampled RSS: 161.05 MB
+Runtime standard deviation: 0.1029 sec
+Total processed: 5000
+Total failed: 0
+
+FASTEST CONFIGURATION
+fastest_candidate: 12 workers, batch 64
+
+LOWEST MEMORY CONFIGURATION
+memory_efficient: 4 workers, batch 64

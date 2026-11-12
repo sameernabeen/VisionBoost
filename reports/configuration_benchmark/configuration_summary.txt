@@ -1,0 +1,32 @@
+VISIONBOOST CONFIGURATION BENCHMARK
+============================================================
+Dataset size: 500
+Repetitions: 3
+Random seed: 42
+Worker counts: [4, 8, 12, 16]
+Batch sizes: [8, 16, 32, 64]
+Memory metric: median peak sampled aggregate process-tree RSS
+
+WORKERS | BATCH | MEDIAN TIME | MEDIAN THROUGHPUT | MEDIAN RSS
+      4 |     8 |      4.6787 |            106.87 |      71.68 MB
+      4 |    16 |      4.3939 |            113.79 |      72.39 MB
+      4 |    32 |      4.3596 |            114.69 |      71.41 MB
+      4 |    64 |      4.2688 |            117.13 |      68.93 MB
+      8 |     8 |      4.2336 |            118.10 |      79.74 MB
+      8 |    16 |      3.7295 |            134.06 |      84.58 MB
+      8 |    32 |      3.4031 |            146.92 |      94.90 MB
+      8 |    64 |      3.5680 |            140.13 |     114.99 MB
+     12 |     8 |      4.4591 |            112.13 |      86.49 MB
+     12 |    16 |      3.9383 |            126.96 |     103.90 MB
+     12 |    32 |      3.4718 |            144.02 |     114.60 MB
+     12 |    64 |      3.2573 |            153.50 |     165.02 MB
+     16 |     8 |      4.4681 |            111.90 |      83.04 MB
+     16 |    16 |      3.8924 |            128.46 |     106.82 MB
+     16 |    32 |      3.5691 |            140.09 |     137.07 MB
+     16 |    64 |      3.4658 |            144.27 |     193.05 MB
+
+FASTEST CONFIGURATION
+Workers: 12, Batch: 64
+
+LOWEST MEMORY CONFIGURATION
+Workers: 4, Batch: 64
