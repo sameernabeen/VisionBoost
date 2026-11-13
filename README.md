@@ -465,25 +465,6 @@ pip install -r requirements.txt
 python src/generate_data.py
 ```
 
-### Run the Pipelines
-
-**Baseline:**
-
-```powershell
-python src/baseline.py
-```
-
-**Optimized:**
-
-```powershell
-python src/optimized_pipeline.py
-```
-
-**Robust:**
-
-```powershell
-python src/robust_pipeline.py
-```
 
 ### Configure the Optimized Pipeline
 
